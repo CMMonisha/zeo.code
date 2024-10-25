@@ -1,0 +1,284 @@
+## Application 1: Rule Engine with AST
+
+### 1. Data Structure
+
+Data structure for the Abstract Syntax Tree (AST):
+
+python
+class Node:
+    def _init_(self, type, left=None, right=None, value=None):
+        self.type = type            # "operator" or "operand"
+        self.left = left           # Reference to left Node
+        self.right = right         # Reference to right Node
+        self.value = value         # Optional value
+
+
+### 2. Database Choice and Schema
+Database: SQLite (For simplicity in a project; can be replaced with PostgreSQL or any other database.)
+
+Schema Example:
+
+sql
+CREATE TABLE rules (
+    id INTEGER PRIMARY KEY,
+    rule_string TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+### 3. API Design
+
+Here are the function definitions as described in project:
+
+python
+import json
+
+def create_rule(rule_string):
+    # Logic to parse the rule_string and create an AST
+    pass
+
+def combine_rules(rules):
+    # Logic to combine multiple rules into a single AST
+    pass
+
+def evaluate_rule(ast, data):
+    # Logic to evaluate the AST with the provided data
+    pass
+
+
+### 4. Test Cases
+
+- Use unittest or pytest to create test cases for each function.
+
+### Sample Tests
+
+python
+import unittest
+
+class TestRuleEngine(unittest.TestCase):
+    def test_create_rule(self):
+        rule_string = "((age > 30 AND department = 'Sales'))"
+        ast = create_rule(rule_string)
+        self.assertIsNotNone(ast)
+        # further checks on the AST structure
+    
+    def test_combine_rules(self):
+        rule1 = "((age > 30 AND department = 'Sales'))"
+        rule2 = "((age < 25 AND department = 'Marketing'))"
+        combined = combine_rules([rule1, rule2])
+        self.assertIsNotNone(combined)
+    
+    def test_evaluate_rule(self):
+        ast = create_rule("age > 30")
+        data = {"age": 35}
+        result = evaluate_rule(ast, data)
+        self.assertTrue(result)
+
+
+### 5. Bonus Implementations
+
+- Error handling for invalid rules can be achieved using Python exceptions.
+- Validation of attributes can be done by implementing a schema for valid attributes.
+
+---
+
+## Application 2: Real-Time Data Processing System for Weather Monitoring
+
+### 1. Setup and Data Retrieval
+
+Use the OpenWeatherMap API to fetch weather data:
+
+python
+import requests
+import time
+
+API_KEY = 'api key is here'
+cities = ["Delhi", "Mumbai", "Chennai", "Bangalore", "Kolkata", "Hyderabad"]
+
+def get_weather_data(city):
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}"
+    response = requests.get(url)
+    return response.json() if response.status_code == 200 else None
+
+
+### 2. Data Processing and Aggregates
+
+Define functions to process the weather data:
+
+python
+def process_weather_data(data):
+    # Convert Kelvin to Celsius
+    temp = data['main']['temp'] - 273.15
+    # Additional processing logic
+    return {
+        "city": data['name'],
+        "temp": temp,
+        "condition": data['weather'][0]['main']
+    }
+
+def daily_summary(data_list):
+    # Aggregate data for daily summaries
+    pass
+
+
+### 3. Alerting System
+
+Define thresholds for alerts:
+
+python
+def check_thresholds(weather_data, thresholds):
+    if weather_data['temp'] > thresholds['high_temp']:
+        print("Alert: High temperature!")
+
+
+### 4. Visualizations
+
+Consider integration with libraries like Matplotlib, Seaborn or Plotly to visualize the data.
+
+### 5. Test Cases
+
+Implement tests similar to Application 1 to check data retrieval, processing, and alerts.
+
+python
+class TestWeatherMonitoring(unittest.TestCase):
+    def test_get_weather_data(self):
+        data = get_weather_data("Delhi")
+        self.assertIsNotNone(data)
+
+    def test_process_weather_data(self):
+        # Add test logic for processed data
+        pass
+
+
+---
+
+## README Template
+
+### README.md
+
+# Application Title
+Dynamic Rule Engine & Real-Time Weather Monitoring System
+
+## Overview
+
+Application 1: Rule Engine with AST
+
+Objective: Build a 3-tier rule engine that uses Abstract Syntax Trees (AST) to determine user eligibility based on criteria like age, department, and salary. The AST structure allows for flexible rule creation, combination, and modification.
+
+Key Features:
+
+1. AST Structure: Represents logical rules with nodes (operators like AND/OR and operands for conditions).
+
+
+2. Database: Stores rule data and metadata, enabling persistent rule management.
+
+
+3. API Endpoints:
+
+create_rule: Parses a rule string into an AST.
+
+combine_rules: Merges multiple rules efficiently.
+
+evaluate_rule: Tests JSON data against the AST to check eligibility.
+
+
+
+4. Testing: Verifies AST construction, rule combination, and evaluation accuracy with sample data.
+
+
+
+Bonus: Error handling, rule validation, and support for rule modifications and user-defined functions.
+
+
+---
+
+Application 2: Real-Time Data Processing System for Weather Monitoring
+
+Objective: Create a real-time weather monitoring system that gathers and processes data from the OpenWeatherMap API, providing daily summaries and alerting based on weather thresholds.
+
+Key Features:
+
+1. Data Collection: Periodic retrieval of weather data (temperature, main condition, etc.) from Indian metros.
+
+
+2. Data Processing:
+
+Daily rollups to compute average, max, min temperatures, and dominant conditions.
+
+
+
+3. Alert System: Monitors temperature thresholds, triggering alerts when breached.
+
+
+4. Visualization: Displays daily summaries, trends, and alerts.
+
+
+
+Bonus: Extending the system for additional parameters (e.g., humidity), forecast summaries, and a configurable alert system.
+
+
+---
+
+Submission Requirements
+
+1. Codebase: Uploaded to GitHub, with modular and well-documented code.
+
+
+2. README:
+
+Setup instructions (e.g., dependencies, Docker configurations).
+
+Design choices and project purpose.
+
+
+
+3. Testing Documentation: Including detailed test cases for each function and feature.
+
+
+
+These projects demonstrate skills in data structures, API development, real-time processing, and software architecture.
+
+## Setup Instructions
+
+1. Clone the repository
+   bash
+   git clone <https://github.com/CMMonisha/zeo.code.git>
+
+
+2. Install dependencies
+   bash
+   pip install -r requirements.txt
+   
+
+3. Set up database (if applicable)
+   bash
+   docker-compose up -d
+   
+
+4. Run the application
+   bash
+   python app.py
+   
+
+## Design Choices
+
+- *Rule Engine*: Utilizes an AST for rule representation, allowing dynamic modification and evaluation. 
+- *Weather Monitoring*: Integrates with the OpenWeather API to fetch real-time data and aggregates it for analysis.
+
+## Dependencies
+
+- Python 3.8+
+- Flask (or Django, based on your choice)
+- SQLite / PostgreSQL
+- Other libraries as specified in requirements.txt.
+
+## Testing
+
+To run tests, use:
+bash
+python -m unittest discover
+
+
+## GitHub Link
+
+https://github.com/CMMonisha/zeo.code.git
